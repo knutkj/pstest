@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsTest", "PsTest\PsTest.csproj", "{6919C512-FC5C-470D-B7CC-2D84CF68001C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsTestTests", "PsTestTests\PsTestTests.csproj", "{5B3EC49A-3F58-466E-94A8-0F2BD64996EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6919C512-FC5C-470D-B7CC-2D84CF68001C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6919C512-FC5C-470D-B7CC-2D84CF68001C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6919C512-FC5C-470D-B7CC-2D84CF68001C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6919C512-FC5C-470D-B7CC-2D84CF68001C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3EC49A-3F58-466E-94A8-0F2BD64996EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3EC49A-3F58-466E-94A8-0F2BD64996EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3EC49A-3F58-466E-94A8-0F2BD64996EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3EC49A-3F58-466E-94A8-0F2BD64996EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
