@@ -36,8 +36,15 @@
     <Reference Include="System.Management.Automation" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormatTestResultCmdlet.cs" />
+    <Compile Include="IColorFormatter.cs" />
     <Compile Include="InvokeTestCmdlet.cs" />
+    <Compile Include="IPipeline.cs" />
+    <Compile Include="IRunspace.cs" />
     <Compile Include="NewTestCmdlet.cs" />
+    <Compile Include="PipelineWrapper.cs" />
+    <Compile Include="PowerShellIseColorFormatter.cs" />
+    <Compile Include="RunspaceWrapper.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

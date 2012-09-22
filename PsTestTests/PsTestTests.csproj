@@ -42,8 +42,12 @@
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormatTestResultCmdletTests.cs" />
     <Compile Include="InvokeTestCmdletTests.cs" />
     <Compile Include="NewTestCmdletTests.cs" />
+    <Compile Include="PipelineWrapperTests.cs" />
+    <Compile Include="PowerShellIseColorFormatterTests.cs" />
+    <Compile Include="RunspaceWrapperTests.cs" />
     <Compile Include="TestResultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestTests.cs" />

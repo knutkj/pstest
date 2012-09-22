@@ -12,7 +12,11 @@ namespace PsTest
         /// <summary>
         /// Get or set the test to invoke.
         /// </summary>
-        [Parameter(Mandatory = true)]
+        [Parameter(
+            Position = 0,
+            Mandatory = true,
+            ValueFromPipeline = true
+        )]
         public Test[] Test { get; set; }
 
         /// <summary>

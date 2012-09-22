@@ -14,13 +14,21 @@ namespace PsTest
         /// <summary>
         /// Get or set the name of the unit test.
         /// </summary>
-        [Parameter(Mandatory = true)]
+        [Parameter(
+            Position = 0,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true
+        )]
         public string Name { get; set; }
 
         /// <summary>
         /// Get or set the unit test's script block.
         /// </summary>
-        [Parameter(Mandatory = true)]
+        [Parameter(
+            Position = 1,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true
+        )]
         public ScriptBlock TestScript { get; set; }
 
         /// <summary>

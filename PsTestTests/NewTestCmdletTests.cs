@@ -41,7 +41,9 @@ namespace PsTestTests
                 .GetAttribute<ParameterAttribute>();
 
             // Assert.
+            Assert.AreEqual(0, attribute.Position);
             Assert.IsTrue(attribute.Mandatory);
+            Assert.IsTrue(attribute.ValueFromPipelineByPropertyName);
         }
 
         [TestMethod]
@@ -55,7 +57,9 @@ namespace PsTestTests
                 .GetAttribute<ParameterAttribute>();
 
             // Assert.
+            Assert.AreEqual(1, attribute.Position);
             Assert.IsTrue(attribute.Mandatory);
+            Assert.IsTrue(attribute.ValueFromPipelineByPropertyName);
         }
 
         [TestMethod]
