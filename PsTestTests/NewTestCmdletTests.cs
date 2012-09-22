@@ -1,16 +1,20 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
 using PsTest;
-using System.Management.Automation;
-using System.Linq;
 using Rhino.Mocks;
 using System.Collections.Generic;
+using System.Management.Automation;
 
 namespace PsTestTests
 {
     [TestClass]
     public class NewTestCmdletTests
     {
+        private class TestableNewTestCmdlet : NewTestCmdlet
+        {
+            public void DoProcessRecord() { ProcessRecord(); }
+        }
+
         [TestMethod]
         public void ClassDecorated()
         {
@@ -60,38 +64,27 @@ namespace PsTestTests
             // Arrange.
             const string expectedName = "Unit test name";
             var expectedTestScript = ScriptBlock.Create("");
+            Test expectedTest = null;
 
-            //var runtime = MockRepository.GenerateMock<ICommandRuntime>();
-            //runtime
-            //    .Expect(r => r.WriteObject(null))
-            //    .IgnoreArguments();
+            var runtime = MockRepository.GenerateMock<ICommandRuntime>();
+            runtime
+                .Expect(r => r.WriteObject(Arg<Test>.Is.TypeOf))
+                .WhenCalled(a => expectedTest = (Test)a.Arguments[0]);
 
-            var cmdlet = new NewTestCmdlet
+            var cmdlet = new TestableNewTestCmdlet
             {
                 Name = expectedName,
-                TestScript = expectedTestScript//,
-                //CommandRuntime = runtime
+                TestScript = expectedTestScript,
+                CommandRuntime = runtime
             };
 
             // Act.
-            var res = ToTestableList(cmdlet.Invoke<Test>());
+            cmdlet.DoProcessRecord();
 
             // Assert.
-            Assert.AreEqual(1, res.Count());
-            var test = res.First();
-            Assert.AreEqual(expectedName, test.Name);
-            Assert.AreEqual(expectedTestScript, test.TestScript);
+            runtime.VerifyAllExpectations();
+            Assert.AreEqual(expectedName, expectedTest.Name);
+            Assert.AreEqual(expectedTestScript, expectedTest.TestScript);
         }
-
-        #region Private helper methods...
-
-        private static List<Test> ToTestableList(IEnumerable<Test> tmp)
-        {
-            var tests = new List<Test>();
-            tests.AddRange(tmp);
-            return tests;
-        }
-
-        #endregion
     }
 }

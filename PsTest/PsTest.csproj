@@ -36,6 +36,7 @@
     <Reference Include="System.Management.Automation" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InvokeTestCmdlet.cs" />
     <Compile Include="NewTestCmdlet.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="TestResult.cs" />
