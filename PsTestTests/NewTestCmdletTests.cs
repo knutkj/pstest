@@ -2,7 +2,8 @@
 using MvcContrib.TestHelper;
 using PsTest;
 using Rhino.Mocks;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Management.Automation;
 
 namespace PsTestTests
@@ -10,7 +11,7 @@ namespace PsTestTests
     [TestClass]
     public class NewTestCmdletTests
     {
-        private class TestableNewTestCmdlet : NewTestCmdlet
+        public class TestableNewTestCmdlet : NewTestCmdlet
         {
             public void DoProcessRecord() { ProcessRecord(); }
         }
@@ -28,6 +29,10 @@ namespace PsTestTests
             // Assert.
             Assert.AreEqual<string>(verb, attribute.VerbName);
             Assert.AreEqual<string>("Test", attribute.NounName);
+            Assert.AreEqual<string>(
+                NewTestCmdlet.DefaultParameterSetName,
+                attribute.DefaultParameterSetName
+            );
         }
 
         [TestMethod]
@@ -52,11 +57,45 @@ namespace PsTestTests
             // Arrange.
 
             // Act.
-            var attribute = typeof(NewTestCmdlet)
+            var attributes = typeof(NewTestCmdlet)
                 .GetProperty("TestScript")
+                .GetCustomAttributes(true)
+                .Where(a => a is ParameterAttribute)
+                .Cast<ParameterAttribute>();
+
+            // Assert.
+            var paramSet1 = attributes.First(a => a.Position == 1);
+            Assert.AreEqual(
+                NewTestCmdlet.DefaultParameterSetName,
+                paramSet1.ParameterSetName
+            );
+            Assert.IsTrue(paramSet1.Mandatory);
+            Assert.IsTrue(paramSet1.ValueFromPipelineByPropertyName);
+
+            var paramSet2 = attributes.First(a => a.Position == 2);
+            Assert.AreEqual(
+                NewTestCmdlet.ExceptionParameterSetName,
+                paramSet2.ParameterSetName
+            );
+            Assert.IsTrue(paramSet2.Mandatory);
+            Assert.IsTrue(paramSet2.ValueFromPipelineByPropertyName);
+        }
+
+        [TestMethod]
+        public void ExpectedExceptionPropDecorated()
+        {
+            // Arrange.
+
+            // Act.
+            var attribute = typeof(NewTestCmdlet)
+                .GetProperty("ExpectedException")
                 .GetAttribute<ParameterAttribute>();
 
             // Assert.
+            Assert.AreEqual(
+                NewTestCmdlet.ExceptionParameterSetName,
+                attribute.ParameterSetName
+            );
             Assert.AreEqual(1, attribute.Position);
             Assert.IsTrue(attribute.Mandatory);
             Assert.IsTrue(attribute.ValueFromPipelineByPropertyName);
@@ -66,29 +105,67 @@ namespace PsTestTests
         public void ProcessRecord()
         {
             // Arrange.
-            const string expectedName = "Unit test name";
-            var expectedTestScript = ScriptBlock.Create("");
-            Test expectedTest = null;
+            var expectedTest = new Test("name", ScriptBlock.Create(""));
 
             var runtime = MockRepository.GenerateMock<ICommandRuntime>();
-            runtime
-                .Expect(r => r.WriteObject(Arg<Test>.Is.TypeOf))
-                .WhenCalled(a => expectedTest = (Test)a.Arguments[0]);
+            runtime.Expect(r => r.WriteObject(expectedTest));
 
-            var cmdlet = new TestableNewTestCmdlet
-            {
-                Name = expectedName,
-                TestScript = expectedTestScript,
-                CommandRuntime = runtime
-            };
+            var cmdlet = MockRepository
+                .GeneratePartialMock<TestableNewTestCmdlet>();
+            cmdlet.CommandRuntime = runtime;
+            cmdlet.Expect(c => c.CreateTest()).Return(expectedTest);
 
             // Act.
             cmdlet.DoProcessRecord();
 
             // Assert.
+            cmdlet.VerifyAllExpectations();
             runtime.VerifyAllExpectations();
-            Assert.AreEqual(expectedName, expectedTest.Name);
-            Assert.AreEqual(expectedTestScript, expectedTest.TestScript);
+        }
+
+        [TestMethod]
+        public void CreateTestCreatesTestWithoutExpectedException()
+        {
+            // Arrange.
+            const string expectedName = "name";
+            var expectedTestScript = ScriptBlock.Create("");
+
+            var cmdlet = new NewTestCmdlet
+            {
+                Name = expectedName,
+                TestScript = expectedTestScript
+            };
+
+            // Act.
+            var test = cmdlet.CreateTest();
+
+            // Assert.
+            Assert.AreEqual(expectedName, test.Name);
+            Assert.AreEqual(expectedTestScript, test.TestScript);
+        }
+
+        [TestMethod]
+        public void CreateTestCreatesTestWithExpectedException()
+        {
+            // Arrange.
+            const string expectedName = "name";
+            var expectedTestScript = ScriptBlock.Create("");
+            var expectedException = typeof(Exception);
+
+            var cmdlet = new NewTestCmdlet
+            {
+                Name = expectedName,
+                TestScript = expectedTestScript,
+                ExpectedException = expectedException
+            };
+
+            // Act.
+            var test = cmdlet.CreateTest();
+
+            // Assert.
+            Assert.AreEqual(expectedName, test.Name);
+            Assert.AreEqual(expectedTestScript, test.TestScript);
+            Assert.AreEqual(expectedException, test.ExpectedException);
         }
     }
 }

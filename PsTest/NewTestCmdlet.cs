@@ -8,9 +8,16 @@ namespace PsTest
     /// <summary>
     /// Creates a new unit test.
     /// </summary>
-    [Cmdlet(VerbsCommon.New, "Test")]
+    [Cmdlet(
+        VerbsCommon.New, 
+        "Test", 
+        DefaultParameterSetName = DefaultParameterSetName
+    )]
     public class NewTestCmdlet : Cmdlet
     {
+        internal const string DefaultParameterSetName = "Default";
+        internal const string ExceptionParameterSetName = "Exception";
+
         /// <summary>
         /// Get or set the name of the unit test.
         /// </summary>
@@ -22,10 +29,28 @@ namespace PsTest
         public string Name { get; set; }
 
         /// <summary>
+        /// Get or set the expected exception.
+        /// </summary>
+        [Parameter(
+            ParameterSetName = ExceptionParameterSetName,
+            Position = 1,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true
+        )]
+        public Type ExpectedException { get; set; }
+
+        /// <summary>
         /// Get or set the unit test's script block.
         /// </summary>
         [Parameter(
+            ParameterSetName = DefaultParameterSetName,
             Position = 1,
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true
+        )]
+        [Parameter(
+            ParameterSetName = ExceptionParameterSetName,
+            Position = 2,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true
         )]
@@ -36,7 +61,19 @@ namespace PsTest
         /// </summary>
         protected override void ProcessRecord()
         {
-            WriteObject(new Test(Name, TestScript));
+            WriteObject(CreateTest());
+        }
+
+        /// <summary>
+        /// Creates a new test based on the specified parameters.
+        /// </summary>
+        internal virtual Test CreateTest()
+        {
+            if (ExpectedException != null)
+            {
+                return new Test(Name, TestScript, ExpectedException);
+            }
+            return new Test(Name, TestScript);
         }
     }
 }

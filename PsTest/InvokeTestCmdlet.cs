@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Management.Automation;
 
 namespace PsTest
@@ -39,14 +40,43 @@ namespace PsTest
             {
                 try
                 {
-                    test.TestScript.Invoke(null);
+                    InvokeScriptBlock(test.TestScript);
                     WriteObject(CreateTestResult(test.Name, true));
                 }
-                catch
+                catch (Exception e)
                 {
-                    WriteObject(CreateTestResult(test.Name, false));
+                    WriteObject(CreateTestResult(
+                        test.Name, 
+                        IsExpectedException(test.ExpectedException, e)
+                    ));
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns true if the expection is expected.
+        /// </summary>
+        private static bool IsExpectedException(
+            Type expectedExceptionType,
+            Exception actualException
+        )
+        {
+            return expectedExceptionType != null &&
+                actualException.InnerException != null &&
+                actualException
+                    .InnerException
+                    .GetType()
+                    .Equals(expectedExceptionType);
+        }
+
+        /// <summary>
+        /// Invokes the specified script block.
+        /// </summary>
+        internal virtual Collection<PSObject> InvokeScriptBlock(
+            ScriptBlock scriptBlock
+        )
+        {
+            return scriptBlock.Invoke(null);
         }
     }
 }
