@@ -9,6 +9,8 @@ namespace PsTest
     [Cmdlet(VerbsCommon.Format, "TestResult")]
     public class FormatTestResultCmdlet : PSCmdlet
     {
+        private const string LineTemplate = "{0,-80}";
+
         /// <summary>
         /// The default color to use for successful tests.
         /// </summary>
@@ -54,6 +56,13 @@ namespace PsTest
         public virtual string FailureColor { get; set; }
 
         /// <summary>
+        /// Get or set a value indicating if all tests results should be
+        /// written to pipeline.
+        /// </summary>
+        [Parameter()]
+        public virtual SwitchParameter All { get; set; }
+
+        /// <summary>
         /// Get or set the color formatter.
         /// </summary>
         [Parameter()]
@@ -79,7 +88,36 @@ namespace PsTest
         {
             foreach (var testResult in TestResult)
             {
-                WriteTestResult(testResult);
+                NumberOfTestResults++;
+                if (testResult.Success)
+                {
+                    NumberOfSuccessfulTestResults++;
+                }
+                if (!testResult.Success || All)
+                {
+                    WriteTestResult(testResult);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get or set the number of test results.
+        /// </summary>
+        internal virtual int NumberOfTestResults { get; set; }
+
+        /// <summary>
+        /// Get or set the number of succesful test results.
+        /// </summary>
+        internal virtual int NumberOfSuccessfulTestResults { get; set; }
+
+        /// <summary>
+        /// Get a flag that indicates if all test results was succesful.
+        /// </summary>
+        internal virtual bool Success
+        {
+            get
+            {
+                return NumberOfSuccessfulTestResults == NumberOfTestResults;
             }
         }
 
@@ -88,8 +126,10 @@ namespace PsTest
         /// </summary>
         internal virtual void WriteTestResult(TestResult testResult)
         {
-            ColorFormatter.SetBackgroundColor(SuccessColor);
-            WriteObject(string.Format("{0,-80}", testResult.TestName));
+            ColorFormatter.SetBackgroundColor(
+                testResult.Success ? SuccessColor : FailureColor
+            );
+            WriteObject(string.Format(LineTemplate, testResult.TestName));
         }
 
         /// <summary>
@@ -97,7 +137,25 @@ namespace PsTest
         /// </summary>
         protected override void EndProcessing()
         {
+            WriteEndResult();
             ColorFormatter.SetBackgroundColor(OriginalBackGroundColor);
+        }
+
+        /// <summary>
+        /// Writes the end result of the invoked test results.
+        /// </summary>
+        internal virtual void WriteEndResult()
+        {
+            ColorFormatter.SetBackgroundColor(
+                Success ? SuccessColor : FailureColor
+            );
+            string endResult = string.Format(
+                "Passed tests: {0}/{1}.",
+                NumberOfSuccessfulTestResults,
+                NumberOfTestResults
+            );
+            WriteObject(string.Empty);
+            WriteObject(string.Format(LineTemplate, endResult));
         }
     }
 }

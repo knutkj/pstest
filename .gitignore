@@ -4,4 +4,7 @@ obj
 
 # mstest test results
 TestResults
+
+# VS user files
 *.suo
+*.user
