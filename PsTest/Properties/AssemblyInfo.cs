@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PsTest")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("PsTest PowerShell unit testing framework")]
+[assembly: AssemblyDescription("PsTest is a PowerShell unit testing framework. PsTest is a binary PowerShell module written in C# .NET. PsTest uses a syntax very similar to the QUnit JavaScript unit testing framework, which is used to test jQuery.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Knut Kristian Johansen")]
 [assembly: AssemblyProduct("PsTest")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright © Knut Kristian Johansen 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

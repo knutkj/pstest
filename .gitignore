@@ -8,3 +8,7 @@ TestResults
 # VS user files
 *.suo
 *.user
+
+# build folders
+/build
+/tmp

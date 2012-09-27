@@ -54,7 +54,7 @@ namespace PsTest
         }
 
         /// <summary>
-        /// Returns true if the expection is expected.
+        /// Returns true if the exception is expected.
         /// </summary>
         private static bool IsExpectedException(
             Type expectedExceptionType,

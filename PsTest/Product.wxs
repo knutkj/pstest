@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product
+        Id="*"
+        Name="PsTest PowerShell Module (x64)"
+        Language="1033"
+        Version="!(bind.FileVersion.AssemblyFile)"
+        Manufacturer="Knut Kristian Johansen"
+        UpgradeCode="9ABC3A35-0C31-457E-A5AE-4D41733D4D74">
+
+        <Package
+            Compressed="yes"
+            Manufacturer="Knut Kristian Johansen"
+            Description="Installs the PsTest PowerShell Module."
+            Platform="x64"
+            InstallerVersion="200"/>
+
+        <Media
+            Id="1"
+            Cabinet="media1.cab"
+            EmbedCab="yes" />
+
+        <Directory
+            Id="TARGETDIR"
+            Name="SourceDir">
+            <Directory
+                Id="System64Folder">
+                <Directory
+                    Id="PowerShellDirectory"
+                    Name="WindowsPowerShell">
+                    <Directory
+                        Id="PowerShellV10Directory"
+                        Name="v1.0">
+                        <Directory
+                            Id="PowerShellModulesDirectory"
+                            Name="Modules">
+                            <Directory
+                                Id="PsTestDirectory"
+                                Name="PsTest" />
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="PsTestDirectory">
+            <Component
+                Id="AssemblyComponent"
+                Guid="E2FCA72F-D9A2-417A-99FE-F029D79D91A6"
+                Win64="yes">
+                <File
+                    Id="AssemblyFile"
+                    Source="PsTest.dll"
+                    KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <Feature
+            Id="ModuleFeature"
+            Title="Module"
+            Level="1"
+            Absent="disallow">
+            <ComponentRef Id="AssemblyComponent" />
+        </Feature>
+        
+    </Product>
+</Wix>
