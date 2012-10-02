@@ -9,12 +9,13 @@
     <projectUrl>https://github.com/knutkj/pstest/wiki</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>Now a copy of the PsTest binary PowerShell module is imported. This change fixes an uninstall/upgrade issue. For details see: https://github.com/knutkj/pstest/wiki/PsTest-NuGet-package.</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>PowerShell TDD testing</tags>
   </metadata>
   <files>
     <file src="..\readme.txt" target="" />
+    <file src="InitBase.ps1" target="tools" />
     <file src="Init.ps1" target="tools" />
   </files>
 </package>

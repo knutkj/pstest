@@ -4,11 +4,11 @@
 #
 
 param (
-	$InstallPath,
-	$ToolsPath,
-	$Package,
-	$Project
+    $InstallPath,
+    $ToolsPath,
+    $Package,
+    $Project
 )
 
-$modulePath = $ToolsPath | Join-Path -ChildPath PsTest
-Import-Module -Name $modulePath
+. ($ToolsPath | Join-Path -ChildPath InitBase.ps1)
+$ToolsPath | Copy-PsTestAssembly | Import-Module
